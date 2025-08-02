@@ -1,20 +1,25 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import { readdir, readFile, writeFile, mkdir } from 'fs/promises';
-import { join, dirname } from 'path';
-import matter from 'gray-matter';
-import { remark } from 'remark';
-import html from 'remark-html';
+import { readdir, readFile, writeFile, mkdir, copyFile } from 'fs/promises';
+import { join, dirname, basename } from 'path';
+import { existsSync } from 'fs';
+import { parse } from 'node-html-parser';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const execAsync = promisify(exec);
 
 interface Chapter {
   id: string;
+  slug: string;
   title: string;
+  type: 'chapter' | 'page';
   content: string;
   htmlContent: string;
   codeBlocks: CodeBlock[];
-  metadata: Record<string, any>;
+  images: string[];
 }
 
 interface CodeBlock {
@@ -25,9 +30,10 @@ interface CodeBlock {
   lineNumbers?: boolean;
 }
 
-const UPSTREAM_DIR = '../nature-of-code-upstream';
-const OUTPUT_DIR = '../app/public/content';
-const INDEX_FILE = '../app/public/content/index.json';
+const UPSTREAM_DIR = join(__dirname, '../nature-of-code-upstream');
+const OUTPUT_DIR = join(__dirname, '../app/public/content');
+const INDEX_FILE = join(__dirname, '../app/public/content/index.json');
+const CONTENT_JSON = join(UPSTREAM_DIR, 'content/content.json');
 
 async function syncUpstream() {
   console.log('🔄 Syncing upstream Nature of Code repository...');
@@ -48,6 +54,8 @@ async function syncUpstream() {
   
   // Create output directory
   await mkdir(OUTPUT_DIR, { recursive: true });
+  await mkdir(join(OUTPUT_DIR, 'chapters'), { recursive: true });
+  await mkdir(join(OUTPUT_DIR, 'images'), { recursive: true });
   
   // Save processed chapters
   for (const chapter of chapters) {
@@ -58,14 +66,30 @@ async function syncUpstream() {
       join(chapterDir, 'content.json'),
       JSON.stringify(chapter, null, 2)
     );
+    
+    // Copy images
+    for (const imagePath of chapter.images) {
+      const sourceImage = join(UPSTREAM_DIR, 'content', imagePath);
+      const destImage = join(OUTPUT_DIR, imagePath);
+      
+      try {
+        await mkdir(dirname(destImage), { recursive: true });
+        if (existsSync(sourceImage)) {
+          await copyFile(sourceImage, destImage);
+        }
+      } catch (error) {
+        console.error(`Failed to copy image ${imagePath}:`, error);
+      }
+    }
   }
   
   // Create index
   const index = {
     chapters: chapters.map(ch => ({
       id: ch.id,
+      slug: ch.slug,
       title: ch.title,
-      metadata: ch.metadata,
+      type: ch.type,
     })),
     lastSync: new Date().toISOString(),
   };
@@ -78,79 +102,99 @@ async function syncUpstream() {
 
 async function processChapters(): Promise<Chapter[]> {
   const chapters: Chapter[] = [];
-  const chaptersDir = join(UPSTREAM_DIR, 'content');
   
   try {
-    const files = await readdir(chaptersDir);
-    const chapterFiles = files
-      .filter(f => f.endsWith('.md') || f.endsWith('.mdx'))
-      .sort();
+    // Read the content.json file to get chapter listing
+    const contentJsonStr = await readFile(CONTENT_JSON, 'utf-8');
+    const contentIndex = JSON.parse(contentJsonStr);
     
-    for (const file of chapterFiles) {
-      const chapter = await processChapter(join(chaptersDir, file));
+    for (const item of contentIndex) {
+      const chapter = await processChapter(item);
       if (chapter) {
         chapters.push(chapter);
       }
     }
   } catch (error) {
-    console.error('Error reading chapters directory:', error);
+    console.error('Error processing chapters:', error);
     console.log('Make sure the upstream submodule is initialized');
   }
   
   return chapters;
 }
 
-async function processChapter(filePath: string): Promise<Chapter | null> {
+async function processChapter(item: any): Promise<Chapter | null> {
   try {
-    const content = await readFile(filePath, 'utf-8');
-    const { data: metadata, content: markdownContent } = matter(content);
+    const filePath = join(UPSTREAM_DIR, 'content', item.src.replace('./', ''));
+    const htmlContent = await readFile(filePath, 'utf-8');
+    
+    // Parse HTML
+    const root = parse(htmlContent);
+    
+    // Extract text content
+    const textContent = root.text;
     
     // Extract code blocks
-    const codeBlocks = extractCodeBlocks(markdownContent);
+    const codeBlocks = extractCodeBlocksFromHtml(root);
     
-    // Convert markdown to HTML
-    const processedContent = await remark()
-      .use(html)
-      .process(markdownContent);
+    // Extract images (this also updates image paths in the HTML)
+    const images = extractImages(root);
     
-    const id = filePath.split('/').pop()?.replace(/\.(md|mdx)$/, '') || 'unknown';
+    // Get the modified HTML with updated image paths
+    const modifiedHtml = root.toString();
     
     return {
-      id,
-      title: metadata.title || 'Untitled Chapter',
-      content: markdownContent,
-      htmlContent: processedContent.toString(),
+      id: item.slug,
+      slug: item.slug,
+      title: item.title,
+      type: item.type,
+      content: textContent,
+      htmlContent: modifiedHtml,
       codeBlocks,
-      metadata,
+      images,
     };
   } catch (error) {
-    console.error(`Error processing chapter ${filePath}:`, error);
+    console.error(`Error processing chapter ${item.title}:`, error);
     return null;
   }
 }
 
-function extractCodeBlocks(content: string): CodeBlock[] {
+function extractCodeBlocksFromHtml(root: any): CodeBlock[] {
   const codeBlocks: CodeBlock[] = [];
-  const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
-  let match;
-  let blockId = 0;
+  const codeElements = root.querySelectorAll('pre[data-code-language]');
   
-  while ((match = codeBlockRegex.exec(content)) !== null) {
-    const language = match[1] || 'javascript';
-    const code = match[2].trim();
+  codeElements.forEach((element: any, index: number) => {
+    const language = element.getAttribute('data-code-language') || 'javascript';
+    const code = element.text.trim();
     
-    // Check for p5.js or Processing code
-    if (language === 'javascript' || language === 'js' || language === 'processing') {
-      codeBlocks.push({
-        id: `code-${blockId++}`,
-        language,
-        code,
-        lineNumbers: code.split('\n').length > 5,
-      });
-    }
-  }
+    codeBlocks.push({
+      id: `code-${index}`,
+      language,
+      code,
+      lineNumbers: code.split('\n').length > 5,
+    });
+  });
   
   return codeBlocks;
+}
+
+function extractImages(root: any): string[] {
+  const images: string[] = [];
+  const imgElements = root.querySelectorAll('img');
+  
+  imgElements.forEach((img: any) => {
+    let src = img.getAttribute('src');
+    if (src) {
+      // Update image src to use /content/ prefix
+      if (!src.startsWith('http') && !src.startsWith('/')) {
+        img.setAttribute('src', `/content/${src}`);
+      } else if (src.startsWith('/')) {
+        img.setAttribute('src', `/content${src}`);
+      }
+      images.push(src);
+    }
+  });
+  
+  return images;
 }
 
 // Run the sync

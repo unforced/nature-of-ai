@@ -1,0 +1,213 @@
+/* Nature of Code content styles */
+.noc-content {
+  line-height: 1.8;
+}
+
+/* Code blocks */
+.noc-content pre[data-code-language] {
+  background-color: #f7f7f7;
+  border: 1px solid #e1e1e1;
+  border-radius: 4px;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+}
+
+.dark .noc-content pre[data-code-language] {
+  background-color: #1e1e1e;
+  border-color: #333;
+  color: #d4d4d4;
+}
+
+/* Inline code */
+.noc-content code {
+  background-color: #f3f4f6;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.85em;
+}
+
+.dark .noc-content code {
+  background-color: #374151;
+  color: #d1d5db;
+}
+
+/* Pre code should not have background */
+.noc-content pre code {
+  background: none;
+  padding: 0;
+}
+
+/* Tables */
+.noc-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+}
+
+.noc-content table td,
+.noc-content table th {
+  border: 1px solid #e5e7eb;
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.dark .noc-content table td,
+.dark .noc-content table th {
+  border-color: #374151;
+}
+
+.noc-content table th {
+  background-color: #f9fafb;
+  font-weight: 600;
+}
+
+.dark .noc-content table th {
+  background-color: #1f2937;
+}
+
+/* Examples */
+.noc-content div[data-type="example"] {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.dark .noc-content div[data-type="example"] {
+  background-color: #1f2937;
+  border-color: #374151;
+}
+
+.noc-content div[data-type="example"] h3 {
+  margin-top: 0;
+  color: #2563eb;
+}
+
+.dark .noc-content div[data-type="example"] h3 {
+  color: #60a5fa;
+}
+
+/* Exercises */
+.noc-content div[data-type="exercise"] {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background-color: #fef3c7;
+  border: 1px solid #fcd34d;
+  border-radius: 8px;
+}
+
+.dark .noc-content div[data-type="exercise"] {
+  background-color: #451a03;
+  border-color: #92400e;
+}
+
+.noc-content div[data-type="exercise"] h3 {
+  margin-top: 0;
+  color: #d97706;
+}
+
+.dark .noc-content div[data-type="exercise"] h3 {
+  color: #fbbf24;
+}
+
+/* Images */
+.noc-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+  display: block;
+}
+
+/* Links */
+.noc-content a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.dark .noc-content a {
+  color: #60a5fa;
+}
+
+.noc-content a:hover {
+  color: #1d4ed8;
+}
+
+.dark .noc-content a:hover {
+  color: #93bbfc;
+}
+
+/* Snipped code indicators */
+.noc-content .snip-above::before,
+.noc-content .snip-below::after {
+  content: "✂️";
+  display: block;
+  text-align: center;
+  opacity: 0.5;
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+}
+
+/* Blank fill-ins for exercises */
+.noc-content .blank {
+  background-color: #dbeafe;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+  border-bottom: 2px solid #2563eb;
+  font-weight: 600;
+}
+
+.dark .noc-content .blank {
+  background-color: #1e3a8a;
+  border-bottom-color: #60a5fa;
+}
+
+/* Section headers */
+.noc-content h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+.noc-content h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+.noc-content h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* Lists */
+.noc-content ul,
+.noc-content ol {
+  margin: 1rem 0;
+  padding-left: 2rem;
+}
+
+.noc-content li {
+  margin: 0.5rem 0;
+}
+
+/* Blockquotes */
+.noc-content blockquote {
+  border-left: 4px solid #e5e7eb;
+  padding-left: 1.5rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: #6b7280;
+}
+
+.dark .noc-content blockquote {
+  border-left-color: #374151;
+  color: #9ca3af;
+}

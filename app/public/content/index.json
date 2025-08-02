@@ -1,0 +1,113 @@
+{
+  "chapters": [
+    {
+      "id": "dedication",
+      "slug": "dedication",
+      "title": "Dedication",
+      "type": "page"
+    },
+    {
+      "id": "acknowledgements",
+      "slug": "acknowledgements",
+      "title": "Acknowledgments",
+      "type": "page"
+    },
+    {
+      "id": "introduction",
+      "slug": "introduction",
+      "title": "Introduction",
+      "type": "page"
+    },
+    {
+      "id": "random",
+      "slug": "random",
+      "title": "0. Randomness",
+      "type": "chapter"
+    },
+    {
+      "id": "vectors",
+      "slug": "vectors",
+      "title": "1. Vectors",
+      "type": "chapter"
+    },
+    {
+      "id": "forces",
+      "slug": "forces",
+      "title": "2. Forces",
+      "type": "chapter"
+    },
+    {
+      "id": "oscillation",
+      "slug": "oscillation",
+      "title": "3. Oscillation",
+      "type": "chapter"
+    },
+    {
+      "id": "particles",
+      "slug": "particles",
+      "title": "4. Particle Systems",
+      "type": "chapter"
+    },
+    {
+      "id": "autonomous-agents",
+      "slug": "autonomous-agents",
+      "title": "5. Autonomous Agents",
+      "type": "chapter"
+    },
+    {
+      "id": "physics-libraries",
+      "slug": "physics-libraries",
+      "title": "6. Physics Libraries",
+      "type": "chapter"
+    },
+    {
+      "id": "cellular-automata",
+      "slug": "cellular-automata",
+      "title": "7. Cellular Automata",
+      "type": "chapter"
+    },
+    {
+      "id": "fractals",
+      "slug": "fractals",
+      "title": "8. Fractals",
+      "type": "chapter"
+    },
+    {
+      "id": "genetic-algorithms",
+      "slug": "genetic-algorithms",
+      "title": "9. Evolutionary Computing",
+      "type": "chapter"
+    },
+    {
+      "id": "neural-networks",
+      "slug": "neural-networks",
+      "title": "10. Neural Networks",
+      "type": "chapter"
+    },
+    {
+      "id": "neuroevolution",
+      "slug": "neuroevolution",
+      "title": "11. Neuroevolution",
+      "type": "chapter"
+    },
+    {
+      "id": "appendix-creature",
+      "slug": "appendix-creature",
+      "title": "Appendix: Creature Design ",
+      "type": "page"
+    },
+    {
+      "id": "resources",
+      "slug": "resources",
+      "title": "Additional Resources",
+      "type": "page"
+    },
+    {
+      "id": "credits",
+      "slug": "credits",
+      "title": "Credits",
+      "type": "page"
+    }
+  ],
+  "lastSync": "2025-08-02T20:57:32.765Z"
+}
