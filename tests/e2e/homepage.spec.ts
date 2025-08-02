@@ -14,7 +14,7 @@ test.describe('Homepage', () => {
   });
 
   test('should display three feature cards', async ({ page }) => {
-    const featureCards = page.locator('.grid > div');
+    const featureCards = page.locator('.grid > a');
     await expect(featureCards).toHaveCount(3);
     
     await expect(featureCards.nth(0)).toContainText('Interactive Book');
@@ -33,7 +33,7 @@ test.describe('Homepage', () => {
   test('should be responsive', async ({ page }) => {
     // Desktop view
     await page.setViewportSize({ width: 1280, height: 720 });
-    const desktopGrid = page.locator('.grid > div');
+    const desktopGrid = page.locator('.grid > a');
     await expect(desktopGrid).toHaveCount(3);
     
     // Check that cards are displayed side by side on desktop
@@ -43,7 +43,7 @@ test.describe('Homepage', () => {
     
     // Mobile view
     await page.setViewportSize({ width: 375, height: 667 });
-    const mobileGrid = page.locator('.grid > div');
+    const mobileGrid = page.locator('.grid > a');
     await expect(mobileGrid).toHaveCount(3);
     
     // Check that cards are stacked on mobile

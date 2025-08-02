@@ -45,27 +45,29 @@ const mockChapters: Chapter[] = [
 
 export function ChapterNavigation() {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <aside className="w-64 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700">
       <div className="p-4">
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden w-full text-left font-semibold text-lg flex items-center justify-between"
-        >
-          Chapters
-          <svg
-            className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+        <div className="md:hidden">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="w-full text-left font-semibold text-lg flex items-center justify-between"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
+            Chapters
+            <svg
+              className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
         
-        <nav className={`mt-4 space-y-2 ${isOpen ? 'block' : 'hidden md:block'}`}>
+        <nav className={`mt-4 space-y-2 ${isOpen ? 'block' : 'hidden'} md:block`}>
           {mockChapters.map((chapter) => (
             <div key={chapter.id}>
               <Link

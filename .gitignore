@@ -35,6 +35,7 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+/.env.local
 
 # Vercel
 .vercel
@@ -65,3 +66,8 @@ Thumbs.db
 /app/out/
 */dist/
 */build/
+
+# Test results
+test-results/
+playwright-report/
+.last-run.json
