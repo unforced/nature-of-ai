@@ -1,0 +1,10 @@
+node_modules/
+dist/
+build/
+.next/
+out/
+coverage/
+.turbo/
+nature-of-code-upstream/
+*.min.js
+*.min.css

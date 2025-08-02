@@ -1,0 +1,3 @@
+[submodule "nature-of-code-upstream"]
+	path = nature-of-code-upstream
+	url = https://github.com/nature-of-code/noc-book-2.git
